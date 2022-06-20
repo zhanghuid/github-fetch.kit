@@ -5,11 +5,11 @@
 ## 使用
 ```
 # 按指定日期的文件命名保存到文件
-git-fetch cli --language Object-C --created 20220101 --out line
+github-fetch cli --language Object-C --created 20220101 --out line
 # 直接输出到控制台
-git-fetch cli --language Object-C --created 20220101 --out console
+github-fetch cli --language Object-C --created 20220101 --out console
 # 不指定日期
-git-fetch cli --language Object-C --out console
+github-fetch cli --language Object-C --out console
 ```
 
 ## 建议
