@@ -6,6 +6,7 @@ import (
 	"github-fetch/util"
 	"time"
 
+	"github.com/golang-module/carbon"
 	"github.com/google/go-github/github"
 	"github.com/gosuri/uilive"
 	"golang.org/x/oauth2"
@@ -25,7 +26,8 @@ func IsWithCreated(created string) bool {
 func http(c *Collection) (*github.RepositoriesSearchResult, *github.Response) {
 	queryString := fmt.Sprintf("language:%s", c.query.Language)
 	if IsWithCreated(c.query.Created) {
-		queryString = fmt.Sprintf("language:%s created:%s..%s", c.query.Language, c.query.Created, c.query.Created)
+		createdString := carbon.Parse(c.query.Created).Format("Y-m-d")
+		queryString = fmt.Sprintf("language:%s created:%s..%s", c.query.Language, createdString, createdString)
 	}
 
 	result, repos, err := c.client.Search.Repositories(ctx,
