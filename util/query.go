@@ -1,6 +1,7 @@
 package util
 
 type Query struct {
+	Keyword  string
 	Language string
 	Sort     string
 	Order    string

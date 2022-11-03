@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github-fetch/util"
+	"strings"
 	"time"
 
 	"github.com/golang-module/carbon"
@@ -23,13 +24,32 @@ func IsWithCreated(created string) bool {
 	return created != "-1"
 }
 
+func IsWithKeyWord(kw string) bool {
+	return kw != "-1"
+}
+
+func IsWithLanguage(language string) bool {
+	return language != "-1"
+}
+
 func http(c *Collection) (*github.RepositoriesSearchResult, *github.Response) {
-	queryString := fmt.Sprintf("language:%s", c.query.Language)
-	if IsWithCreated(c.query.Created) {
-		createdString := carbon.Parse(c.query.Created).Format("Y-m-d")
-		queryString = fmt.Sprintf("language:%s created:%s..%s", c.query.Language, createdString, createdString)
+
+	queryArr := []string{}
+	if IsWithLanguage(c.query.Language) {
+		queryArr = append(queryArr,
+			fmt.Sprintf("language:%s", c.query.Language))
 	}
 
+	if IsWithCreated(c.query.Created) {
+		createdString := carbon.Parse(c.query.Created).Format("Y-m-d")
+		queryArr = append(queryArr,
+			fmt.Sprintf("created:%s..%s", createdString, createdString))
+	}
+
+	if IsWithKeyWord((c.query.Keyword)) {
+		queryArr = append(queryArr, fmt.Sprintf(c.query.Keyword))
+	}
+	queryString := strings.Join(queryArr, " ")
 	result, repos, err := c.client.Search.Repositories(ctx,
 		queryString,
 		&github.SearchOptions{
