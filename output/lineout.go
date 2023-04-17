@@ -30,11 +30,11 @@ func init() {
 	}
 }
 
-func (l LineOut) Do(v github.Repository, step int, p *github.Response) {
+func (l LineOut) Do(v github.Repository, step int, pager util.Pager) {
 
 	util.Log(util.LOG_TYPE_INFO,
-		fmt.Sprintf("[pages:%d][perPage:%d][pos:%d]\tclone url: %s",
-			p.LastPage, l.query.PerPage, step, *v.CloneURL), false)
+		fmt.Sprintf("[total: %d][pages:%d][perPage:%d][pos:%d]\tclone url: %s",
+			pager.TotalNum, pager.LastPage, l.query.PerPage, step, *v.CloneURL), false)
 	// 当没有指定日期时
 	filename := l.query.Created
 	if !collection.IsWithCreated(l.query.Created) {

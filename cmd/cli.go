@@ -8,11 +8,13 @@ import (
 	"github-fetch/collection"
 	"github-fetch/output"
 	"github-fetch/util"
+	"math"
 
 	"github.com/spf13/cobra"
 )
 
 var query util.Query
+var pager util.Pager
 
 // cliCmd represents the cli command
 // rootCmd represents the base command when called without any subcommands
@@ -25,22 +27,19 @@ github-fetch cli --language Object-C --keyword "jquery in:name" --created 202201
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		// 初始化输出
+		result := collection.New(query).Get()
+		pager.TotalNum = result.GetTotal()
+		pager.LastPage = (int)(math.Ceil(float64(result.GetTotal()) / float64(query.PerPage)))
+
 		outputProvider := output.New(query).Get(query.Out)
-
-		p := collection.New(query).Pager()
-		if p.LastPage == 0 {
-			p.LastPage = 1
-		}
-
 		step := 0
 
-		// 定义分页条数
-		for page := 1; page <= p.LastPage; page++ {
-			query.Page = page
+		for i := 1; i <= pager.LastPage; i++ {
+			query.Page = i
 			result := collection.New(query).Get()
 			for _, v := range result.Repositories {
 				step++
-				outputProvider.Do(v, step, p)
+				outputProvider.Do(v, step, pager)
 			}
 		}
 	},

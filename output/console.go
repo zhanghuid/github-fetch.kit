@@ -11,8 +11,8 @@ type Console struct {
 	query util.Query
 }
 
-func (c Console) Do(v github.Repository, step int, p *github.Response) {
+func (c Console) Do(v github.Repository, step int, pager util.Pager) {
 	util.Log(util.LOG_TYPE_INFO,
-		fmt.Sprintf("[pages: %d][perPage: %d][pos: %d]\tclone url: %s",
-			p.LastPage, c.query.PerPage, step, *v.CloneURL), false)
+		fmt.Sprintf("[total: %d][pages: %d][perPage: %d][pos: %d]\tclone url: %s",
+			pager.TotalNum, pager.LastPage, c.query.PerPage, step, *v.CloneURL), false)
 }
